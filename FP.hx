@@ -1,0 +1,454 @@
+package;
+
+import haxe.ds.Option;
+
+typedef Pair<T, U> = { _1 : T, _2 : U }
+
+class Func {
+	public static function fun<T>(x:T) : Void -> T {
+		return function () return x;
+	}
+}
+
+class Options {
+
+	public static function ifOpt<T>(x : T, cond : Bool) : Option<T> {
+		return cond?Some(x):None;
+	}
+
+	public static function ifPred<T>(x : T, pred : T -> Bool) : Option<T> {
+		return pred(x)?Some(x):None;
+	}
+
+	public static function map<T,U>(opt : Option<T>, f: T -> U) : Option<U> {
+		return flatMap(opt, function (x) return option(f(x)));
+	}
+
+	public static function map2<T,U, V>(optA : Option<T>, optB : Option<U>, f: T -> U -> V) : Option<V> {		
+		return flatMap(optA, function (a) return map(optB, f.bind(a)));
+	}
+
+	public static function foreach<T>(opt : Option<T>, f: T -> Void) {
+		switch (opt) {
+			case Some(x): f(x);
+			case _:
+		}
+	}
+
+	inline public static function fold<T,U>(opt : Option<T>, f: T -> U, g : Void -> U) : U {
+		return
+			switch (opt) {
+				case Some(x): f(x);
+				case _: g();
+			};
+	}
+
+	inline public static function flatMap<T,U>(opt : Option<T>, f: T -> Option<U>) : Option<U> {
+		return
+			switch (opt) {
+				case Some(x): f(x);
+				case _: None;
+			};
+	}
+
+	public static function filter<T>(opt : Option<T>, pred : T -> Bool) : Option<T> {
+		return
+			switch (opt) {
+				case Some(x) if (pred(x)): Some(x);
+				case _: None;
+			};
+	}
+
+	inline public static function option<T>(x : Null<T>) : Option<T> {
+		return (null == x)?None:Some(x);
+	}
+
+	public static function orElse<T>(opt: Option<T>, alt : Void -> Option<T>) : Option<T> {
+		return
+			switch (opt) {
+				case v = Some(_): v;
+				case None: alt();
+			}
+	}
+
+	public static function getOrElse<T>(opt: Option<T>, alt : Void -> T) : T {
+		return
+			switch (opt) {
+				case Some(v): v;
+				case None: alt();
+			}
+	}
+
+	inline public static function getUnsafe<T>(opt: Option<T>, error : Void -> String) : T {
+		return getOrElse(opt, function () return { throw error(); null; });
+	}
+
+	inline public static function toArray<T>(opt : Option<T>) : Array<T> {
+		return
+			switch (opt) {
+				case Some(x) : [x];
+				case _: [];
+			}
+	}
+
+	inline public static function isDefined<T>(o : Option<T>) : Bool {
+		return switch (o) {
+			case None: false;
+			case _: true;
+		}
+	}
+
+	inline public static function exists<T>(o : Option<T>, pred : T -> Bool) : Bool {
+		return switch (o) {
+			case None:false;
+			case Some(x): pred(x);
+		};
+	}
+
+	inline public static function flatten<T>(o : Option<Option<T>>) : Option<T> {
+		return flatMap(o, function (x) return x);
+	}
+
+}
+
+class Arrays {
+
+	
+	inline public static function at<T>(arr:Array<T>, index : Int) : Option<T> {
+		return Options.option(arr[index]);
+	}
+
+	inline public static function insertAt<T>(arr : Array<T>, index : Int, v : T) : Array<T> {
+		var res = arr.copy();
+		res.insert(index, v);
+		return res;
+	}
+
+	inline public static function removeEntry<T>(arr : Array<T>, v : T) : Array<T> {
+		var res = arr.copy();
+		res.remove(v);
+		return res;
+	}
+
+	inline public static function drop<T>(arr:Array<T>, n: Int) :Array<T> {
+		var res = [];
+		for (i in n...arr.length) {
+			res.push(arr[i]);
+		}
+		return res;
+	}
+
+	inline public static function take<T>(arr:Array<T>, n: Int) :Array<T> {
+		var res = [];
+		for (i in 0...n) {
+			res.push(arr[i]);
+		}
+		return res;
+	}
+
+	inline public static function takeWhile<T>(arr:Array<T>, pred: T -> Bool) :Array<T> {
+		var res = [];
+		for (x in arr) {
+			if (!pred(x))
+				return res;
+			res.push(x);
+		}
+		return res;
+	}
+
+	public static function headOpt<T>(arr : Array<T>) : Option<T> {
+		return Options.option(arr[0]);
+	}
+
+	public static function tailOpt<T>(arr : Array<T>) : Option<T> {
+		return Options.option(arr[arr.length-1]);
+	}
+
+	inline public static function firstOpt<T>(arr: Array<T>) {
+		return headOpt(arr);
+	}
+
+	inline public static function lastOpt<T>(arr: Array<T>) {
+		return tailOpt(arr);
+	}
+
+	public static function collect<T,U>(arr : Array<T>, f: T -> Option<U>) : Array<U> {		
+		var res = [];
+		for (v in arr) {
+			switch (f(v)) {
+				case Some(x) : res.push(x);
+				case _ :
+			}
+		}
+		return res;
+	}
+
+	public static function collectOptions<T,U>(arr : Array<Option<T> >) : Array<T> {
+		var res = [];
+		for (v in arr) {
+			switch (v) {
+				case Some(x) : res.push(x);
+				case _ :
+			}
+		}
+		return res;
+	}
+
+
+	public static function foreach<T>(arr : Array<T>, f: T -> Void) {		
+		for (v in arr) {
+			f(v);
+		}
+	}
+
+	public static function map<T,U>(arr : Array<T>, f: T -> U) : Array<U> {		
+		var res = [];
+		for (v in arr) {
+			res.push(f(v));
+		}
+		return res;
+	}
+
+	public static function map2<T,U, V>(arr : Array<T>, arr2 : Array<U>, f: T -> U -> V) : Array<V> {
+		var res = [];
+		var i = 0;
+		var length = Std.int(Math.min(arr.length, arr2.length));
+		for (i in 0...length) {
+			res.push(f(arr[i], arr2[i]));
+		}
+		return res;
+	}
+
+	public static function mapi<T,U>(arr : Array<T>, f: T -> Int -> U) : Array<U> {		
+		var res = [];
+		var acc = 0;
+		for (v in arr) {
+			res.push(f(v, acc));
+			acc += 1;
+		}
+		return res;
+	}
+
+	inline public static function flatMap<T,U>(arr : Array<T>, f: T -> Array<U>) : Array<U> {
+		var res = [];
+		for (v in arr) {
+			res = res.concat(f(v));
+		}
+		return res;
+	}
+
+	inline public static function flatten<T>(arr : Array<Array<T>>) : Array<T> {
+		var res = [];
+		for (v in arr) {
+			res = res.concat(v);
+		}
+		return res;
+	}
+
+	inline public static function foldLeft<I,O>(arr : Array<I>, init: O, func : I -> O -> O) : O {
+		var res = init;
+		for (v in arr) {
+			res = func(v, res);
+		}
+		return res;
+	}
+
+	public static function reduceLeft<T>(arr : Array<T>, func : T -> T -> T) : Option<T> {
+		var res = arr[0];
+		if (res == null) {
+			return None;
+		} else {
+			for (i in 1...arr.length) {
+				res = func(res, arr[i]);
+			}
+			return Some(res);
+		}
+	}
+
+	public static function zipWithIndex<T>(arr : Array<T>) : Array<Pair<T,Int> > {
+		var res : Array<Pair<T, Int> > = [];
+		var acc = 0;
+		for (x in arr) {
+			res.push({ _1 : x, _2 : acc});
+			acc += 1;
+		}
+		return res;
+	}
+
+	public static function unzip<T, U>(arr : Array<Pair<T, U>>) : Pair<Array<T>, Array<U> > {
+		var first = [];
+		var second = [];
+		for (x in arr) {
+			first.push(x._1);
+			second.push(x._2);
+		}
+		return { _1 : first, _2 : second };
+	}
+
+
+	public static function filter<T>(arr : Array<T>, pred : T -> Bool) : Array<T> {
+		var res = [];
+		for (v in arr) {
+			if (pred(v)) {
+				res.push(v);
+			}
+		}
+		return res;
+	}
+
+// based on ref equality - not structural.
+	public static function distinct<T>(arr : Array<T>) : Array<T> {
+		var res = [];
+		for (v in arr) {
+			res.remove(v);
+			res.push(v);
+		}
+		return res;
+	}
+
+	public static function distinctEq<T>(arr : Array<T>, eq : T -> T -> Bool) : Array<T> {
+		var res = [];
+		for (v in arr) {
+			var found = Lambda.find(res, function (o) return eq(o,v)) != null;
+			if (!found) {
+				res.push(v);				
+			}
+		}
+		return res;
+	}
+
+	public static function find<T>(arr : Array<T>, pred : T -> Bool) : Option<T> {
+		for (v in arr) {
+			if (pred(v))
+				return Some(v);
+		}
+		return None;
+	}
+
+	public static function findi<T>(arr : Array<T>, pred : T -> Int -> Bool) : Option<T> {
+		var i = 0;
+		for (v in arr) {
+			if (pred(v, i))
+				return Some(v);
+			i += 1;
+		}
+		return None;
+	}
+
+	inline public static function exists<T>(arr : Array<T>, pred : T -> Bool) : Bool {
+		return Options.isDefined(find(arr, pred));
+	}
+
+	public static function reversed<T>(arr : Array<T>) : Array<T> {
+		var res = arr.copy();
+		res.reverse();
+		return res;
+	}
+
+	public static function partition<T>(arr : Array<T>, pred : T -> Bool) : { ok : Array<T>, nok : Array<T> } {
+		var ok = [];
+		var nok = [];
+
+		for (x in arr) {
+			if (pred(x))
+				ok.push(x);
+			else
+				nok.push(x);
+		}
+		return {
+			ok : ok,
+			nok : nok
+		};
+	} 
+
+	public static function curse<T>(arr : Array<T>, pred : T -> T -> Int) : Array<T> {
+		var res = arr.copy();
+		res.sort(pred);
+		return res;
+	}
+
+}
+
+class Maps {
+
+	public static function getOpt<K,V>(map :Map<K, V>, k : K) : Option<V> {
+		return Options.option(map.get(k));
+	}
+
+	public static function getOrElse<K,V>(map :Map<K, V>, k : K, alt : Void -> V) : V {
+		var x = map.get(k);
+		return (x ==null)?alt():x;
+	}
+
+	public static function getOrElseUpdate<K,V>(map :Map<K, V>, k : K, alt : Void -> V) : V {
+		var x = map.get(k);
+		return
+			if (x==null) {
+				var res = alt();
+				map.set(k, res);
+				res;
+			} else x;
+	}
+
+	inline public static function copy<V>(map : Map<Int,V>) : Map<Int, V> {		
+		return copyGen(map, function () return new haxe.ds.IntMap<V>());
+	}
+
+	public static function copyGen<K, V>(map : Map<K,V>, newMap : Void -> Map<K, V>) : Map<K, V> {
+		var newMap = newMap();
+		for (k in map.keys()) {
+			newMap.set(k, map.get(k));
+		}
+		return newMap;
+	}
+
+	public static function update<V>(map :Map<Int, V>, k : Int, f : Option<V> -> Option<V> ) : Map<Int, V> {
+		var newMap = copy(map);
+		Options.fold(
+			f(Options.option(map.get(k))),
+			function (v) return newMap.set(k, v),
+			function () newMap.remove(k)
+		);	
+		return newMap;
+	}
+
+	public static function forEach<K, V>(map : Map<K,V>, pred : V -> Void) : Void {
+		for (v in map.iterator()) {
+			pred(v);
+		}
+	}
+
+	public static function forEachKeys<K, V>(map : Map<K,V>, pred : K -> Void) : Void {
+		for (k in map.keys()) {
+			pred(k);
+		}
+	}
+
+}
+
+class Thunk {
+
+	inline public static function thunk<T>(x : T) : Void -> T {
+		return function () return x;
+	}
+
+}
+
+class Strings {
+	public static function mkString(arr : Array<String>, sep : String = "", start : String = "", end : String = "") {
+		var res = Arrays.reduceLeft(arr, function (a, b) return a + sep + b);
+		return start + res + end;
+	}
+}
+
+class Iterators {
+
+	public static function toArray<T>(iterator: Iterator<T>) : Array<T> {
+		var res = [];
+		for (alpha in iterator) {
+			res.push(alpha);
+		}
+		return res;
+	}
+
+}
