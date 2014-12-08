@@ -3,6 +3,11 @@ package;
 import haxe.ds.Option;
 
 typedef Pair<T, U> = { _1 : T, _2 : U }
+class Pairs {
+	public static function and<T, U>(a : T, b : U) : Pair<T, U> {
+		return { _1 : a, _2 : b};
+	}
+}
 
 class Func {
 	public static function fun<T>(x:T) : Void -> T {
