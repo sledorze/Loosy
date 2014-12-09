@@ -417,18 +417,32 @@ class Maps {
 		return newMap;
 	}
 
-	public static function forEach<K, V>(map : Map<K,V>, pred : V -> Void) : Void {
+	public static function toArray<K, V>(map : Map<K,V>) : Array<Pair<K, V> > {
+		var res = [];
+		for (k in map.keys()) {
+			res.push(Pairs.and(k, map.get(k)));
+		}		
+		return res;
+	}
+
+	public static function forEach<K, V>(map : Map<K,V>, pred : K -> V -> Void) : Void {
+		for (k in map.keys()) {
+			var v = map.get(k);
+			pred(k, v);
+		}
+	}
+
+	public static function forEachValue<K, V>(map : Map<K,V>, pred : V -> Void) : Void {
 		for (v in map.iterator()) {
 			pred(v);
 		}
 	}
 
-	public static function forEachKeys<K, V>(map : Map<K,V>, pred : K -> Void) : Void {
+	public static function forEachKey<K, V>(map : Map<K,V>, pred : K -> Void) : Void {
 		for (k in map.keys()) {
 			pred(k);
 		}
 	}
-
 }
 
 class Thunk {
