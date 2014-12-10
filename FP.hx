@@ -13,6 +13,11 @@ class Func {
 	public static function fun<T>(x:T) : Void -> T {
 		return function () return x;
 	}
+
+	public static function andThen<A,B,C>(f : A -> B, g : B -> C) : A -> C {
+		return function (x) return g(f(x));
+	}
+
 }
 
 class Options {
