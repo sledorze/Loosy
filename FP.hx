@@ -7,6 +7,12 @@ class Pairs {
 	public static function and<T, U>(a : T, b : U) : Pair<T, U> {
 		return { _1 : a, _2 : b};
 	}
+	public static function fst<T, U>(p : Pair<T, U>) : T {
+		return p._1;
+	}
+	public static function snd<T, U>(p : Pair<T, U>) : U {
+		return p._2;
+	}
 }
 
 class Func {
@@ -105,6 +111,13 @@ class Options {
 		return switch (o) {
 			case None: false;
 			case _: true;
+		}
+	}
+
+	inline public static function notDefined<T>(o : Option<T>) : Bool {
+		return switch (o) {
+			case None: true;
+			case _: false;
 		}
 	}
 
