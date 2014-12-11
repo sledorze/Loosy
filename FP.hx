@@ -226,10 +226,17 @@ class Arrays {
 		return res;
 	}
 
-
 	public static function foreach<T>(arr : Array<T>, f: T -> Void) {		
 		for (v in arr) {
 			f(v);
+		}
+	}
+
+	public static function foreachi<T>(arr : Array<T>, f: Int -> T -> Void) {	
+		var i = 0;	
+		for (v in arr) {
+			f(i, v);
+			i++;
 		}
 	}
 
