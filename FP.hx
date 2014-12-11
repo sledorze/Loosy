@@ -20,6 +20,15 @@ class Func {
 		return function () return x;
 	}
 
+	public static function onCall<T,U>(f:T->U,t:T) : Void -> U {
+		return function () return f(t);
+	}
+
+	public static function onCall2<A,B,U>(f:A->B->U,a:A,b:B) : Void -> U {
+		return function () return f(a,b);
+	}
+
+
 	public static function andThen<A,B,C>(f : A -> B, g : B -> C) : A -> C {
 		return function (x) return g(f(x));
 	}
