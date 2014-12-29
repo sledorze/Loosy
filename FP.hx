@@ -150,6 +150,18 @@ class Arrays {
 		return Options.option(arr[index]);
 	}
 
+	inline public static function head<T>(arr: Array<T>) : T {
+		return arr[0];
+	}
+
+	inline public static function tail<T>(arr: Array<T>) : Array<T> {
+		return removeEntry(arr, arr[0]);
+	}
+
+	inline public static function isEmpty<T>(arr: Array<T>) : Bool {
+		return arr.length == 0;
+	}
+
 	inline public static function insertAt<T>(arr : Array<T>, index : Int, v : T) : Array<T> {
 		var res = arr.copy();
 		res.insert(index, v);
