@@ -184,7 +184,8 @@ class Arrays {
 
 	inline public static function take<T>(arr:Array<T>, n: Int) :Array<T> {
 		var res = [];
-		for (i in 0...n) {
+		var nbElem = Std.int(Math.min(n, arr.length));
+		for (i in 0...nbElem) {
 			res.push(arr[i]);
 		}
 		return res;
