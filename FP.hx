@@ -191,7 +191,7 @@ class Arrays {
 		return res;
 	}
 
-	inline public static function takeWhile<T>(arr:Array<T>, pred: T -> Bool) :Array<T> {
+	public static function takeWhile<T>(arr:Array<T>, pred: T -> Bool) :Array<T> {
 		var res = [];
 		for (x in arr) {
 			if (!pred(x))
@@ -199,6 +199,10 @@ class Arrays {
 			res.push(x);
 		}
 		return res;
+	}
+
+	public static function takeWhileRight<T>(arr:Array<T>, pred: T -> Bool) :Array<T> {
+		return reversed(takeWhile(reversed(arr), pred));
 	}
 
 	public static function headOpt<T>(arr : Array<T>) : Option<T> {
