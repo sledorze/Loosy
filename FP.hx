@@ -130,11 +130,12 @@ class Options {
 		}
 	}
 
-	inline public static function exists<T>(o : Option<T>, pred : T -> Bool) : Bool {
-		return switch (o) {
-			case None:false;
+	inline public static function exists<T>(o : Option<T>, pred : T -> Bool) : Bool {		
+		var res = switch (o) {
+			case None: false;
 			case Some(x): pred(x);
 		};
+		return res;
 	}
 
 	inline public static function flatten<T>(o : Option<Option<T>>) : Option<T> {
