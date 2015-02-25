@@ -61,19 +61,21 @@ class Options {
 	}
 
 	inline public static function fold<T,U>(opt : Option<T>, f: T -> U, g : Void -> U) : U {
-		return
+		var res =
 			switch (opt) {
 				case Some(x): f(x);
 				case _: g();
 			};
+		return res;
 	}
 
 	inline public static function flatMap<T,U>(opt : Option<T>, f: T -> Option<U>) : Option<U> {
-		return
+		var res =
 			switch (opt) {
 				case Some(x): f(x);
 				case _: None;
 			};
+		return res;
 	}
 
 	public static function filter<T>(opt : Option<T>, pred : T -> Bool) : Option<T> {
@@ -109,11 +111,12 @@ class Options {
 	}
 
 	inline public static function toArray<T>(opt : Option<T>) : Array<T> {
-		return
+		var res =
 			switch (opt) {
 				case Some(x) : [x];
 				case _: [];
 			}
+		return res;
 	}
 
 	inline public static function isDefined<T>(o : Option<T>) : Bool {
