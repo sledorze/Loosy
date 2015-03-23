@@ -313,6 +313,16 @@ class Arrays {
 		return res;
 	}
 
+	inline public static function foldLefti<I,O>(arr : Array<I>, init: O, func : Int -> I -> O -> O) : O {
+		var index = 0;
+		var res = init;
+		for (v in arr) {
+			res = func(index, v, res);
+			index = index + 1;
+		}
+		return res;
+	}
+
 	public static function reduceLeft<T>(arr : Array<T>, func : T -> T -> T) : Option<T> {
 		var res = arr[0];
 		if (res == null) {
