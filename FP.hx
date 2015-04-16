@@ -186,6 +186,14 @@ class Arrays {
 		return res;
 	}
 
+	inline public static function dropRight<T>(arr:Array<T>, n: Int) :Array<T> {
+		var res = [];
+		for (i in 0...(arr.length-n)) {
+			res.push(arr[i]);
+		}
+		return res;
+	}
+
 	inline public static function take<T>(arr:Array<T>, n: Int) :Array<T> {
 		var res = [];
 		var nbElem = Std.int(Math.min(n, arr.length));
