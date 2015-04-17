@@ -528,7 +528,10 @@ class Thunk {
 
 class Strings {
 	public static function mkString(arr : Array<String>, sep : String = "", start : String = "", end : String = "") {
-		var res = Arrays.reduceLeft(arr, function (a, b) return a + sep + b);
+		var res =
+			Options.getOrElse(
+				Arrays.reduceLeft(arr, function (a, b) return a + sep + b),
+				function () return "");
 		return start + res + end;
 	}
 }
