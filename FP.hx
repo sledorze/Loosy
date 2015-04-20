@@ -331,6 +331,19 @@ class Arrays {
 		return res;
 	}
 
+	public static function unfold<A, B>(a : A, f : A -> Option<Pair<A, B> > ) : Array<B> {
+		var res = [];
+		var cont = true;
+		while (cont) {
+			var v = f(a);
+			switch (v) {
+				case None: cont = false;
+				case Some(p): a = p._1; res.push(p._2);
+			}			
+		}		
+		return res;
+	}
+
 	public static function reduceLeft<T>(arr : Array<T>, func : T -> T -> T) : Option<T> {
 		var res = arr[0];
 		if (res == null) {
