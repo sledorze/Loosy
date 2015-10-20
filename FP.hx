@@ -106,6 +106,14 @@ class Options {
 			}
 	}
 
+	public static function getOrElseValue<T>(opt: Option<T>, alt : T) : T {
+		return
+			switch (opt) {
+				case Some(v): v;
+				case None: alt;
+			}
+	}
+
 	inline public static function getUnsafe<T>(opt: Option<T>, error : Void -> String) : T {
 		return getOrElse(opt, function () return { throw error(); null; });
 	}
@@ -452,9 +460,27 @@ class Arrays {
 		};
 	} 
 
+	public static function joinWith<T>(arr : Array<T>, v : T) : Array<T> {
+		var res = [];
+		for (x in arr) {
+			res.push(x);
+			res.push(v);
+		}
+		res.pop();
+		return res;
+	}
+
 	public static function curse<T>(arr : Array<T>, pred : T -> T -> Int) : Array<T> {
 		var res = arr.copy();
 		res.sort(pred);
+		return res;
+	}
+
+	public static function chars(s : String) : Array<String> {
+		var res = [];
+		for (i in 0...s.length) {
+			res.push(s.charAt(i));
+		}
 		return res;
 	}
 
