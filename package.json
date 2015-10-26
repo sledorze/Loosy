@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LeKiosqueFr/Loosy.git"
+    "url": "git+https://github.com/sledorze/Loosy.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/LeKiosqueFr/Loosy/issues"
+    "url": "https://github.com/sledorze/Loosy/issues"
   },
-  "homepage": "https://github.com/LeKiosqueFr/Loosy#readme"
+  "homepage": "https://github.com/sledorze/Loosy#readme"
 }
