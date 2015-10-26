@@ -1,0 +1,19 @@
+{
+  "name": "loosy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sledorze/Loosy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sledorze/Loosy/issues"
+  },
+  "homepage": "https://github.com/sledorze/Loosy#readme"
+}
