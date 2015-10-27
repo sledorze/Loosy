@@ -69,6 +69,15 @@ class Options {
 		return res;
 	}
 
+	inline public static function foldValue<T,U>(opt : Option<T>, f: T -> U, g : U) : U {
+		var res =
+			switch (opt) {
+				case Some(x): f(x);
+				case _: g;
+			};
+		return res;
+	}
+
 	inline public static function flatMap<T,U>(opt : Option<T>, f: T -> Option<U>) : Option<U> {
 		var res =
 			switch (opt) {
