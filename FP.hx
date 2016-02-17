@@ -49,7 +49,7 @@ class Options {
 		return flatMap(opt, function (x) return option(f(x)));
 	}
 
-	public static function map2<T,U, V>(optA : Option<T>, optB : Option<U>, f: T -> U -> V) : Option<V> {		
+	public static function map2<T,U, V>(optA : Option<T>, optB : Option<U>, f: T -> U -> V) : Option<V> {
 		return flatMap(optA, function (a) return map(optB, f.bind(a)));
 	}
 
@@ -150,7 +150,7 @@ class Options {
 		}
 	}
 
-	inline public static function exists<T>(o : Option<T>, pred : T -> Bool) : Bool {		
+	inline public static function exists<T>(o : Option<T>, pred : T -> Bool) : Bool {
 		var res = switch (o) {
 			case None: false;
 			case Some(x): pred(x);
@@ -166,7 +166,7 @@ class Options {
 
 class Arrays {
 
-	
+
 	inline public static function at<T>(arr:Array<T>, index : Int) : Option<T> {
 		return Options.option(arr[index]);
 	}
@@ -250,7 +250,7 @@ class Arrays {
 		return tailOpt(arr);
 	}
 
-	public static function collect<T,U>(arr : Array<T>, f: T -> Option<U>) : Array<U> {		
+	public static function collect<T,U>(arr : Array<T>, f: T -> Option<U>) : Array<U> {
 		var res = [];
 		for (v in arr) {
 			switch (f(v)) {
@@ -272,21 +272,21 @@ class Arrays {
 		return res;
 	}
 
-	public static function foreach<T>(arr : Array<T>, f: T -> Void) {		
+	public static function foreach<T>(arr : Array<T>, f: T -> Void) {
 		for (v in arr) {
 			f(v);
 		}
 	}
 
-	public static function foreachi<T>(arr : Array<T>, f: Int -> T -> Void) {	
-		var i = 0;	
+	public static function foreachi<T>(arr : Array<T>, f: Int -> T -> Void) {
+		var i = 0;
 		for (v in arr) {
 			f(i, v);
 			i++;
 		}
 	}
 
-	public static function map<T,U>(arr : Array<T>, f: T -> U) : Array<U> {		
+	public static function map<T,U>(arr : Array<T>, f: T -> U) : Array<U> {
 		var res = [];
 		for (v in arr) {
 			res.push(f(v));
@@ -304,7 +304,7 @@ class Arrays {
 		return res;
 	}
 
-	public static function mapi<T,U>(arr : Array<T>, f: T -> Int -> U) : Array<U> {		
+	public static function mapi<T,U>(arr : Array<T>, f: T -> Int -> U) : Array<U> {
 		var res = [];
 		var acc = 0;
 		for (v in arr) {
@@ -348,6 +348,24 @@ class Arrays {
 		return res;
 	}
 
+	inline public static function foldRight<I,O>(arr : Array<I>, init: O, func : I -> O -> O) : O {
+		var res = init;
+		for (v in reversed(arr)) {
+			res = func(v, res);
+		}
+		return res;
+	}
+
+	inline public static function foldRighti<I,O>(arr : Array<I>, init: O, func : Int -> I -> O -> O) : O {
+		var index = arr.length;
+		var res = init;
+		for (v in reversed(arr)) {
+			res = func(index, v, res);
+			index = index - 1;
+		}
+		return res;
+	}
+
 	public static function unfold<A, B>(a : A, f : A -> Option<Pair<A, B> > ) : Array<B> {
 		var res = [];
 		var cont = true;
@@ -356,8 +374,8 @@ class Arrays {
 			switch (v) {
 				case None: cont = false;
 				case Some(p): a = p._1; res.push(p._2);
-			}			
-		}		
+			}
+		}
 		return res;
 	}
 
@@ -419,7 +437,7 @@ class Arrays {
 		for (v in arr) {
 			var found = Lambda.find(res, function (o) return eq(o,v)) != null;
 			if (!found) {
-				res.push(v);				
+				res.push(v);
 			}
 		}
 		return res;
@@ -467,7 +485,7 @@ class Arrays {
 			ok : ok,
 			nok : nok
 		};
-	} 
+	}
 
 	public static function joinWith<T>(arr : Array<T>, v : T) : Array<T> {
 		var res = [];
@@ -516,7 +534,7 @@ class Maps {
 			} else x;
 	}
 
-	inline public static function copy<V>(map : Map<Int,V>) : Map<Int, V> {		
+	inline public static function copy<V>(map : Map<Int,V>) : Map<Int, V> {
 		return copyGen(map, function () return new haxe.ds.IntMap<V>());
 	}
 
@@ -534,7 +552,7 @@ class Maps {
 			f(Options.option(map.get(k))),
 			function (v) return newMap.set(k, v),
 			function () newMap.remove(k)
-		);	
+		);
 		return newMap;
 	}
 
@@ -542,7 +560,7 @@ class Maps {
 		var res = [];
 		for (k in map.keys()) {
 			res.push(Pairs.and(k, map.get(k)));
-		}		
+		}
 		return res;
 	}
 
