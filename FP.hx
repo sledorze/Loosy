@@ -37,6 +37,7 @@ class Func {
 
 class Options {
 
+
 	public static function ifOpt<T>(x : T, cond : Bool) : Option<T> {
 		return cond?Some(x):None;
 	}
@@ -606,6 +607,14 @@ class Iterators {
 			res.push(alpha);
 		}
 		return res;
+	}
+
+}
+
+class AllEq {
+	
+	public static function isEqual<T, U : T>(t : T, u : U) {
+		return u == t;
 	}
 
 }
