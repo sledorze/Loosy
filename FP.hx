@@ -101,11 +101,7 @@ class Options {
 	}
 
 	public static function orElse<T>(opt: Option<T>, alt : Void -> Option<T>) : Option<T> {
-		return
-			switch (opt) {
-				case v = Some(_): v;
-				case None: alt();
-			}
+		return opt == None? alt():opt;
 	}
 
 	public static function getOrElse<T>(opt: Option<T>, alt : Void -> T) : T {
@@ -138,17 +134,11 @@ class Options {
 	}
 
 	inline public static function isDefined<T>(o : Option<T>) : Bool {
-		return switch (o) {
-			case None: false;
-			case _: true;
-		}
+		return o != None;
 	}
 
 	inline public static function notDefined<T>(o : Option<T>) : Bool {
-		return switch (o) {
-			case None: true;
-			case _: false;
-		}
+		return o == None;
 	}
 
 	inline public static function exists<T>(o : Option<T>, pred : T -> Bool) : Bool {
