@@ -162,7 +162,7 @@ class Arrays {
 		return Options.option(arr[index]);
 	}
 
-	inline public static function head<T>(arr: Array<T>) : T {
+	inline public static function head<T>(arr: Array<T>) : Null<T> {
 		return arr[0];
 	}
 
