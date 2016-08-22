@@ -88,6 +88,15 @@ class Options {
 		return res;
 	}
 
+	inline public static function flatMap2<T,U,V>(optA : Option<T>, optB : Option<U>, f: T -> U -> Option<V>) : Option<V> {
+		var res =
+			switch (optA) {
+				case Some(a): flatMap(optB, f.bind(a));
+				case _: None;
+			};
+		return res;
+	}
+
 	public static function filter<T>(opt : Option<T>, pred : T -> Bool) : Option<T> {
 		return
 			switch (opt) {
