@@ -211,6 +211,19 @@ class Arrays {
 		return res;
 	}
 
+	inline public static function chunkBy<T>(arr:Array<T>, n: Int) :Array<Array<T>> {
+		n = Std.int(Math.max(1, n));
+		var res = [];
+		var i = 0;
+		var total = arr.length;
+		while (i < total) {
+			res.push(arr.slice(i, i+n));
+			i += n;
+		}
+		return res;
+	}
+
+
 	inline public static function take<T>(arr:Array<T>, n: Int) :Array<T> {
 		var res = [];
 		var nbElem = Std.int(Math.min(n, arr.length));
@@ -259,6 +272,17 @@ class Arrays {
 			}
 		}
 		return res;
+	}
+
+	public static function collectIfAllSome<T>(arr : Array<Option<T>>) : Option<Array<T>> {
+		var res = [];
+		for (v in arr) {
+			switch (v) {
+				case Some(x) : res.push(x);
+				case _ : return None;
+			}
+		}
+		return Some(res);
 	}
 
 	public static function collectOptions<T,U>(arr : Array<Option<T> >) : Array<T> {
@@ -463,6 +487,15 @@ class Arrays {
 
 	inline public static function exists<T>(arr : Array<T>, pred : T -> Bool) : Bool {
 		return Options.isDefined(find(arr, pred));
+	}
+
+	inline public static function all<T>(arr : Array<T>, pred : T -> Bool) : Bool {
+		for (x in arr) {
+			if (!pred(x)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static function reversed<T>(arr : Array<T>) : Array<T> {
